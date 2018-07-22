@@ -5,7 +5,7 @@
       </slot>
     </div>
     <div class="dots">
-      <span class="dot" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots"></span>
+      <span class="dot" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots" :key="index"></span>
     </div>
   </div>
 </template>
@@ -101,7 +101,6 @@ export default {
           pageIndex -= 1
         }
         this.currentPageIndex = pageIndex
-        console.log(pageIndex)
 
         if (this.autoPlay) {
           this._play()
@@ -116,7 +115,6 @@ export default {
     },
     _initDots () {
       this.dots = new Array(this.children.length)
-      console.log(this.dots)
     },
     _play () {
       let pageIndex = this.currentPageIndex + 1
