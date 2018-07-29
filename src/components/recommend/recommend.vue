@@ -1,35 +1,44 @@
 <template>
   <div class="recommend" ref="recommend">
-    <div class="recommend-content">
-      <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
-        <slider>
-          <div v-for="item in recommends" :key="item.id">
-            <a :href="item.linkUrl">
-              <img class="needsclick" :src="item.picUrl">
-            </a>
+    <scroll ref="scroll" class="recommend-content" :data="discList">
+      <div>
+        <div class="recommend-content">
+          <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
+            <slider>
+              <div v-for="item in recommends" :key="item.id">
+                <a :href="item.linkUrl">
+                  <img class="needsclick" @load="loadImage" v-lazy="item.imgurl">
+                </a>
+              </div>
+            </slider>
           </div>
-        </slider>
+          <div class="recommend-list">
+            <h1 class="list-title">热门歌单推荐</h1>
+            <ul>
+              <li v-for="item in discList" :key="item.id" class="item">
+                <div class="icon">
+                  <img width="60" height="60" :src="item.imgurl">
+                </div>
+                <div class="text">
+                  <h2 class="name" v-html="item.creator.name"></h2>
+                  <p class="desc" v-html="item.dissname"></p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul>
-          <li v-for="item in discList" :key="item.id" class="item">
-            <div class="icon">
-              <img width="60" height="60" :src="item.imgurl">
-            </div>
-            <div class="text">
-              <h2 class="name" v-html="item.creator.name"></h2>
-              <p class="desc" v-html="item.dissname"></p>
-            </div>
-          </li>
-        </ul>
+      <div class="loading-container" v-show="!discList.length">
+        <loading></loading>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Slider from 'base/slider/slider'
+import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 import { getRecommend, getDiscList } from 'api/recommend'
 import { ERR_OK } from 'api/config'
 
@@ -45,6 +54,12 @@ export default {
     this._getDiscList()
   },
   methods: {
+    loadImage () {
+      if (!this.checkloaded) {
+        this.checkloaded = true
+        this.$refs.scroll.refresh()
+      }
+    },
     _getRecommend () {
       getRecommend().then((res) => {
         if (res.code === ERR_OK) {
@@ -55,14 +70,15 @@ export default {
     _getDiscList () {
       getDiscList().then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res.data.list)
           this.discList = res.data.list
         }
       })
     }
   },
   components: {
-    Slider
+    Slider,
+    Scroll,
+    Loading
   }
 }
 </script>
