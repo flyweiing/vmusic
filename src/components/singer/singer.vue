@@ -1,5 +1,6 @@
 <template>
   <div class="singer" ref="singer">
+    <list-view :data="singers"></list-view>
   </div>
 </template>
 
@@ -7,6 +8,7 @@
 import {getSingerList} from 'api/singer'
 import {ERR_OK} from 'api/config'
 import Singer from 'common/js/singer'
+import ListView from 'base/listview/listview'
 
 const HOT_SINGER_LEN = 10
 const HOT_NAME = '热门'
@@ -25,7 +27,6 @@ export default {
       getSingerList().then((res) => {
         if (res.code === ERR_OK) {
           this.singers = this._normalizeSinger(res.data.list)
-          console.log(this.singers)
         }
       })
     },
@@ -55,6 +56,7 @@ export default {
           id: item.Fsinger_mid
         }))
       })
+      console.log(map)
       // 为了得到有序列表，我们需要处理 map
       let ret = []
       let hot = []
@@ -73,7 +75,7 @@ export default {
     }
   },
   components: {
-
+    ListView
   }
 }
 
