@@ -56,7 +56,6 @@ export default {
           id: item.Fsinger_mid
         }))
       })
-      console.log(map)
       // 为了得到有序列表，我们需要处理 map
       let ret = []
       let hot = []

@@ -8,12 +8,12 @@
     <ul>
       <li v-for="group in data" :key="group.id" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
-        <uL>
+        <ul>
           <li @click="selectItem(item)" v-for="item in group.items" :key="item.id" class="list-group-item">
             <img class="avatar" v-lazy="item.avatar">
             <span class="name">{{item.name}}</span>
           </li>
-        </uL>
+        </ul>
       </li>
     </ul>
     <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove"
@@ -45,7 +45,7 @@ export default {
   props: {
     data: {
       type: Array,
-      default: []
+      default: null
     }
   },
   computed: {
@@ -54,7 +54,7 @@ export default {
         return group.title.substr(0, 1)
       })
     },
-    fixedTitle() {
+    fixedTitle () {
       if (this.scrollY > 0) {
         return ''
       }
@@ -78,7 +78,7 @@ export default {
     selectItem (item) {
       this.$emit('select', item)
     },
-    onShortcutTouchStart(e) {
+    onShortcutTouchStart (e) {
       let anchorIndex = getData(e.target, 'index')
       let firstTouch = e.touches[0]
       this.touch.y1 = firstTouch.pageY
